@@ -143,8 +143,8 @@ Body {
   height: 100vh;
   width: 35rem;
   padding: 0.5rem;
-  background-color: #fff;
-  color: var(--primary);
+  background-color: #e7b77d;
+  color: #5c4033;
   transition: 0.3s;
   overflow-y: auto;
   max-height: 500px;
@@ -184,7 +184,7 @@ Body {
   padding: 2px 5px;
   cursor: pointer;
   margin: 0 8px;
-  background-color: var(--primary);
+  background-color: #4b2e1e;
   color: white;
   font-weight: bold;
   font-size: 1.1rem;
