@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BASAR SLM-LPMI</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Father Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- My style -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Alpine Js -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <!-- app -->
+    <script src="src/app.js" async></script>
+
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    <!-- Navbar Start -->
+    <nav class="navbar" x-data>
+      <a href="#" class="navbar-logo">SLM-LPMI<span>Manokwari</span></a>
+      <div class="navbar-nav">
+        <a href="#home">Home</a>
+        <a href="#about">Tentang SLM</a>
+        <!-- <a href="#menu">Stok Ikan</a> -->
+        <a href="#products">Basar Kami</a>
+        <a href="#basarslm">Tentang Basar SLM</a>
+        <!-- <a href="#contact">Kontak</a> -->
+      </div>
+
+      <div class="navbar-extra">
+        <a href="#" id="search-button"><i data-feather="search"></i></a>
+        <a href="#" id="shopping-cart-button"
+          ><i data-feather="shopping-cart"></i>
+          <span
+            class="quantity-badge"
+            x-show="$store.cart.quantity"
+            x-text="$store.cart.quantity"
+          ></span>
+        </a>
+        <a href="#" id="hamburger-menu"><i data-feather="menu"></i></a>
+      </div>
+
+      <!-- Search Form start -->
+      <div class="search-form">
+        <input
+          type="search"
+          id="search-box"
+          placeholder="Masih dalam pengembangan fiture.."
+        />
+        <label for="search-box"><i data-feather="search"></i></label>
+      </div>
+      <!-- Search Form end -->
+
+      <!-- Shopping Cart start -->
+      <div class="shopping-cart">
+        <template x-for="(item, index) in $store.cart.items" x-keys="index">
+          <div class="cart-item">
+            <img :src="`img/products/${item.img}`" :alt="item.name" />
+            <div class="item-detail">
+              <h3 x-text="item.name"></h3>
+              <div class="item-price">
+                <span x-text="rupiah(item.price)"></span> &times;
+                <button id="remove" @click="$store.cart.remove(item.id)">
+                  &minus;
+                </button>
+                <span x-text="item.quantity"></span>
+                <button id="add" @click="$store.cart.add(item)">&plus;</button
+                >&equals;
+                <span x-text="rupiah(item.total)"></span>
+              </div>
+            </div>
+          </div>
+        </template>
+        <h4 x-show="!$store.cart.items.length" style="margin-top: 1rem">
+          Belanjaan Anda
+          <h5
+            x-show="!$store.cart.items.length"
+            style="
+              margin-top: 3rem;
+              color: rgb(223, 223, 240);
+              text-align: center;
+              font-size: 20px;
+            "
+          >
+            Masih Kosong Silahkan Pesan
+          </h5>
+        </h4>
+        <h4 x-show="$store.cart.items.length > 0">
+          Total : <span x-text="rupiah($store.cart.total)"></span>
+        </h4>
+        <button class="delete-all-btn">
+          <i class="fa fa-trash"></i> Hapus Semua
+        </button>
+        <div class="form-container" x-show="$store.cart.items.length">
+          <form action="" id="checkoutForm">
+            <input
+              type="hidden"
+              name="items"
+              x-model="JSON.stringify($store.cart.items)"
+              autocomplete="off"
+            />
+            <input
+              type="hidden"
+              name="total"
+              x-model="$store.cart.total"
+              autocomplete="off"
+            />
+            <h5>Costomer Detail</h5>
+
+            <label for="name">
+              <span>Nama</span>
+              <input type="text" name="name" id="name" />
+            </label>
+
+            <label for="email">
+              <span>Email</span>
+              <input type="email" name="email" id="email" />
+            </label>
+
+            <label for="phone">
+              <span>Phone</span>
+              <input type="number" name="phone" id="phone" autocomplete="off" />
+            </label>
+
+            <button
+              class="checkout-button disabled"
+              type="submit"
+              id="checkout-button"
+              value="checkoout"
+            >
+              Checkout
+            </button>
+
+            <!-- baru ditambah tombol hapus side bar -->
+            <!-- <button
+              class="delete-all-button"
+              type="button"
+              id="delete-all-button"
+              onclick="clearCart()"
+            >
+              <i class="fa fa-trash"></i> Hapus Semua
+            </button> -->
+          </form>
+        </div>
+      </div>
+      <!-- Shopping Cart end -->
+    </nav>
+
+    <!-- Navbar End -->
+
+    <!-- Hero Section Start -->
+    <section class="hero" id="home">
+      <main class="content">
+        <h1><span>Selamat Datang di</span> Basar SLM Manokwari !!!</h1>
+        <p>
+          Belanja sambil melayani — melalui basar ini, Anda ikut mendukung
+          pelayanan penginjilan dan membantu mahasiswa yang membutuhkan. Terima
+          kasih telah menjadi bagian dari gerakan kasih ini. Tuhan Yesus
+          memberkati.
+        </p>
+        <a href="#basarslm" class="cta">Tentang basar SLM</a>
+      </main>
+    </section>
+    <!-- Hero Section End -->
+
+    <!-- about section start -->
+    <section id="about" class="about">
+      <h2><span>Tentang </span>SLM</h2>
+
+      <div class="row">
+        <div class="about-img">
+          <img src="img/tentanglpmi.jpg" alt="Tentang-kami" />
+        </div>
+        <div class="content">
+          <h3>Apa Itu SLM – Student Let Movement dalam LPMI?</h3>
+          <p>
+            Dalam konteks LPMI (Lembaga Pelayanan Mahasiswa Indonesia), SLM
+            merujuk pada Student Let Movement, yaitu sebuah gerakan pelayanan
+            yang dipimpin langsung oleh mahasiswa. Ini bukan sekadar divisi atau
+            seksi, melainkan sebuah pendekatan strategis di mana mahasiswa
+            menjadi motor utama dalam menjalankan misi pelayanan kampus.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="about-img">
+          <img src="img/karakterslm.jpg" alt="Tentang-kami" />
+        </div>
+        <div class="content">
+          <h3>Karakteristik Student Let Movement</h3>
+          <p>
+            <ul>
+              <li> Dipimpin oleh mahasiswa: Mahasiswa bukan hanya peserta, tapi juga
+            perancang, pelaksana, dan penggerak utama kegiatan pelayanan.</li>
+              <li>Berbasis komunitas kampus: Fokus pada pembinaan rohani, karakter,
+            dan kepemimpinan di lingkungan kampus.</li>
+              <li> Mandiri dan kontekstual: Gerakan ini disesuaikan dengan kebutuhan
+            dan dinamika kampus masing-masing.</li>
+              <li>Misi utama: Menjangkau mahasiswa lain dengan nilai-nilai Kristiani
+            melalui pendekatan yang relevan dan kreatif.</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="about-img">
+          <img src="img/basarslm5.jpg" alt="Tentang-kami" />
+        </div>
+        <div class="content">
+          <h3>Tujuan Utama SLM</h3>
+          <p>
+            <ul>
+              <li>Menumbuhkan kepemimpinan rohani di kalangan mahasiswa.</li>
+              <li>Mendorong transformasi pribadi dan komunitas melalui pelayanan.</li>
+              <li>Menjadi wadah pembinaan karakter dan spiritualitas yang
+            berkelanjutan.</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="about-img">
+          <img src="img/foto-foto untuk web basar2.jpg" alt="Tentang-kami" />
+        </div>
+        <div class="content">
+          <h3>Contoh Kegiatan SLM</h3>
+          <p>
+            <ul>
+              <li>Kelompok kecil pembinaan iman.</li>
+              <li>Ibadah kampus dan retret rohani.</li>
+              <li>Pelatihan kepemimpinan mahasiswa.</li>
+              <li>Aksi sosial dan pengabdian masyarakat.</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+    </section>
+    <!-- Basar SLM Section Start -->
+    <section class="basarslm" id="basarslm">
+      <main class="content">
+        <h1><span>Tentang</span> Basar SLM</h1>
+        <p>Basar ini bukan sekadar kegiatan jual beli — ini adalah gerakan kasih yang digerakkan oleh mahasiswa untuk mahasiswa.
+
+Melalui website ini, kamu bisa memesan produk-produk basar yang dari hasilnya akan digunakan untuk menopang kebutuhan relasional dan pribadi dalam pelayanan SLM.
+
+Dana yang terkumpul akan membantu:</p>
+        <p class="daftar-manfaat">
+          <ul>
+            <li>Mahasiswa SLM yang menghadapi tantangan dalam memenuhi biaya Pelayanan Penginjilan dan Pelayanan Kasih</li>
+            <li>Kegiatan membangun hubungan dengan murid baru yang sedang dibina.</li>
+            <li>Fasilitasi ide-ide inovatif dan kegiatan kreatif yang membutuhkan ruang eksplorasi</li>
+          </ul>
+        </p>
+        <a href="#products" class="cta">Beli Sekarang</a>
+      </main>
+    </section>
+    <!-- about section end -->
+
+    <!-- Menu section start -->
+
+    <!-- <section id="menu" class="menu">
+      <h2><span>Stok</span> Ikan</h2>
+      <p>
+        Kami selalu memastikan bahwa stok ikan kami selalu terjaga untuk
+        memenuhi kebutuhan Anda.
+      </p>
+
+      <div class="row">
+        <div class="menu-card">
+          <img src="img/menu/1.jpg" alt="Ikan Kembung" class="menu-card-img" />
+          <h3 class="menu-card-title">- Ikan Kembung -</h3>
+          <p class="menu-card-price">IDR 20K/kg</p>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/2.jpg" alt="Ikan Kembung" class="menu-card-img" />
+          <h3 class="menu-card-title">- Ikan Kakap Merah & Putih -</h3>
+          <p class="menu-card-price">IDR 20K/Ekor</p>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/3.jpg" alt="Ikan Kembung" class="menu-card-img" />
+          <h3 class="menu-card-title">- Ikan Tongkol -</h3>
+          <p class="menu-card-price">IDR 20K/Ekor</p>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/4.jpg" alt="Ikan Kembung" class="menu-card-img" />
+          <h3 class="menu-card-title">- Ikan Tuna Fillet -</h3>
+          <p class="menu-card-price">IDR 20K/kg</p>
+        </div>
+      </div>
+    </section> -->
+
+    <!-- Menu section end -->
+
+    <!-- Products section start -->
+    <section class="products" id="products" x-data="products">
+      <section style="background-color: #fff; margin: 0 auto; width: 50%; padding: 20px; border-radius: 8px; color: #000;">
+      <h2><span>Basar</span> Kami</h2>
+        <p style="font-size: 1.1rem; font-weight: 500; line-height: 1.6;">
+        Kemudahan berbelanja dari rumah dengan sistem pemesanan online yang
+        mudah dan cepat. Silahkan Pilih Basar yang ingin Dipesan dibawah ini!
+      </p>
+    </section>
+
+      <div class="row">
+        <template x-for="(item, index) in items" x-key="index">
+          <div
+            class="product-card"
+            :data-id="item.id"
+            :data-name="item.name"
+            :data-img="item.img"
+            :data-price="item.price"
+            :data-description="item.description"
+          >
+            <div class="product-icons">
+              <a href="#" @click.prevent="$store.cart.add(item)">
+                <svg
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="img/feather-sprite.svg#shopping-cart" />
+                </svg>
+              </a>
+              <a href="javascript:void(0)" class="item-detail-button" @click="openModal(item)">
+                <svg
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="img/feather-sprite.svg#eye" />
+                </svg>
+              </a>
+            </div>
+            <div class="product-image">
+              <img :src="`img/products/${item.img}`" :alt="item.name" />
+            </div>
+            <div class="product-content">
+              <h3 x-text="item.name"></h3>
+              <div class="product-stars">
+                <svg
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="img/feather-sprite.svg#star" />
+                </svg>
+                <svg
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="img/feather-sprite.svg#star" />
+                </svg>
+                <svg
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="img/feather-sprite.svg#star" />
+                </svg>
+                <svg
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="img/feather-sprite.svg#star" />
+                </svg>
+                <svg
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="img/feather-sprite.svg#star" />
+                </svg>
+              </div>
+              <div class="product-price">
+                <span x-text="rupiah(item.price)"></span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <!-- Products section end -->
+
+    <!-- Contact section start -->
+    <!-- <section id="contact" class="contact">
+      <h2><span>Kontak</span> Kami</h2>
+      <p>
+        Jika Anda masih ragu untuk melakukan pemesanan Online, Silahkan Masukan
+        Nama, Email, dan No.hp Anda supaya memudahkan kami untuk menghubungi
+        anda, jika anda mempunyai pertanyaan terkait pemesanan online dan
+        informasi lebih lanjut. Jika ingin membeli langsung di tempat kami, anda
+        bisa melihat peta untuk menemukan Toko kami, Terima Kasih.
+      </p>
+
+      <div class="row">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63830.38958821959!2d134.00155484248873!3d-0.8303417853555122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2d540bbe19e70793%3A0xd1d273ebf872fa5c!2sAmban%2C%20Kec.%20Manokwari%20Bar.%2C%20Kabupaten%20Manokwari%2C%20Papua%20Bar.!5e0!3m2!1sid!2sid!4v1732033297560!5m2!1sid!2sid"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          class="map"
+        ></iframe>
+
+        <form id="contact-form">
+          <div class="input-group">
+            <i data-feather="user"></i>
+            <input type="text" id="name" placeholder="Nama" required />
+          </div>
+          <div class="input-group">
+            <i data-feather="mail"></i>
+            <input type="email" id="email" placeholder="Email" required />
+          </div>
+          <div class="input-group">
+            <i data-feather="phone"></i>
+            <input type="text" id="phone" placeholder="No WhatsApp" required />
+          </div>
+          <button type="submit" class="btn">Kirim Pesan</button>
+        </form>
+      </div>
+    </section> -->
+    <!-- Contact section end -->
+
+    <!-- footer Start -->
+
+    <footer>
+      <div class="socials">
+        <a href="https://www.instagram.com/lpmi_manokwarii?utm_source=qr&igsh=amFjdm5oNzJ0OXY2/" target="_blank"
+          ><i data-feather="instagram"></i
+        ></a>
+        <a href="https://x.com/SLM_Manokwari" target="_blank"
+          ><i data-feather="twitter"></i
+        ></a>
+        <a href="https://web.facebook.com/groups/1146666267209081" target="_blank"
+          ><i data-feather="facebook"></i
+        ></a>
+      </div>
+      <div class="links">
+        <a href="#home">Home</a>
+        <a href="#about">Tentang Kami</a>
+        <a href="#products">Basar Kami</a>
+        <!-- <a href="#menu">Stok Ikan</a>
+        <a href="#contact">Kontak</a> -->
+      </div>
+      <div class="credit">
+        <p>Created by <a href="myprofil.html">JeffZelaya</a>. | &copy; 2025.</p>
+      </div>
+    </footer>
+    <!-- footer end -->
+
+    <!-- Modal Box Item Detail Start -->
+    <div class="modal" id="item-detail-modal">
+      <div class="modal-container">
+        <a href="#" class="close-icon"><i data-feather="x"></i></a>
+        <div class="modal-content">
+          <img src="img/products/1.jpg" alt="product 1" />
+          <div class="product-content">
+            <h3>product 1</h3>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
+              commodi ex distinctio id adipisci excepturi odit minus natus
+              praesentium, perferendis autem dignissimos. Saepe, rem iure!
+            </p>
+            <div class="product-stars">
+              <i data-feather="star" class="star-full"></i>
+              <i data-feather="star" class="star-full"></i>
+              <i data-feather="star" class="star-full"></i>
+              <i data-feather="star" class="star-full"></i>
+              <i data-feather="star"></i>
+            </div>
+            <div class="product-price">IDR 30K <span>IDR 35K</span></div>
+            <a href="#" class="add-to-cart-modal"
+              ><i data-feather="shopping-cart"></i><span>add to cart</span></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Box Item Detail End -->
+
+    <!-- Father Icons -->
+    <script>
+      feather.replace();
+    </script>
+
+    <!-- My Javascript -->
+    <script src="js/script.js"></script>
+  </body>
+</html>
